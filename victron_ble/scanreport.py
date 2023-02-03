@@ -6,7 +6,6 @@ from typing import Set
 from enum import Enum
 from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
-from bleak.backends.scanner import AdvertisementData
 from devices import Device, DeviceData, detect_device_type
 from exceptions import AdvertisementKeyMissingError, UnknownDeviceError
 
