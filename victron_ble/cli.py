@@ -1,4 +1,4 @@
-from scanreport import ScanReport
+from OneTimeScanner import OneTimeScanner
 import asyncio
 import click
 import logging
@@ -30,7 +30,7 @@ def cli(verbose):
 def read(device_keys: List[Tuple[str, str]]):
     
     async def scanAndReport(keys):
-        my_scanner = ScanReport(keys)
+        my_scanner = OneTimeScanner(keys)
         await my_scanner.run()
 
     loop = asyncio.new_event_loop()

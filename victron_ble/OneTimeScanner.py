@@ -29,8 +29,7 @@ class DeviceDataEncoder(json.JSONEncoder):
             return data
 
 
-class ScanReport:
-
+class OneTimeScanner:
 
     def __init__(self, device_keys: dict[str, str] = {}):
         self._device_keys = {k.lower(): v for k, v in device_keys.items()}
