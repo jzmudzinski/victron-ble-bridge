@@ -6,6 +6,7 @@ import logging
 from typing import List, Tuple, Optional
 from bleak.backends.device import BLEDevice
 from devices import Device
+from config import CONFIG
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
@@ -22,11 +23,16 @@ def read(timeout: Optional[int] = 10):
     firebaseClient = FirebaseClient()
     scanning = asyncio.Event()
     loop = asyncio.new_event_loop()   
+    foundDevices = set()
     
     def onDeviceFound(bleDevice: BLEDevice, device: Device):
-        if scanning.is_set(): # let the timeout loop handle the stopping of the scan
-            scanning.clear()
-        firebaseClient.send(bleDevice, device)
+        if (bleDevice.address not in foundDevices):
+            foundDevices.add(bleDevice.address)
+            # if all devices have been found let the timeout loop stop of the scan
+            if (len(foundDevices) == len(CONFIG['devices'].keys())):
+                if scanning.is_set(): 
+                    scanning.clear()
+            firebaseClient.send(bleDevice, device)
 
     async def startScanning():
         victronScanner = VictronScanner(onDeviceFound)
