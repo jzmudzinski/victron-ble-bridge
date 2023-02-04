@@ -38,9 +38,8 @@ def read(device_keys: List[Tuple[str, str]], timeout: Optional[int] = 10):
     def onDeviceFound(str):
         if scanning.is_set(): # let the timeout loop handle the stopping of the scan
             scanning.clear()
-        print(str)
         my_reporter = FirebaseClient()
-        my_reporter.send()
+        my_reporter.send(str)
 
     async def startScanning(keys):
         victronScanner = VictronScanner(onDeviceFound, keys)
