@@ -30,9 +30,10 @@ def cli(verbose):
 
 @cli.command(help="Read data from specified devices")
 @click.argument("device_keys", nargs=-1, type=DeviceKeyParam())
-def read(device_keys: List[Tuple[str, str]], timeout: Optional[int] = 5):
+def read(device_keys: List[Tuple[str, str]], timeout: Optional[int] = 10):
 
     scanning = asyncio.Event()
+    loop = asyncio.new_event_loop()   
     
     def onDeviceFound(str):
         if scanning.is_set(): # let the timeout loop handle the stopping of the scan
@@ -46,7 +47,6 @@ def read(device_keys: List[Tuple[str, str]], timeout: Optional[int] = 5):
         await victronScanner.start()
         scanning.set()
         
-        loop = asyncio.get_event_loop()
         end_time = loop.time() + timeout
         while scanning.is_set():
             if loop.time() > end_time:
@@ -55,7 +55,6 @@ def read(device_keys: List[Tuple[str, str]], timeout: Optional[int] = 5):
             await asyncio.sleep(0.1)
         await victronScanner.stop()
 
-    loop = asyncio.new_event_loop()   
     loop.run_until_complete(startScanning({k: v for k, v in device_keys}))
 
 if __name__ == "__main__":
