@@ -2,7 +2,7 @@ import asyncio
 import inspect
 import logging
 import json
-from typing import Set
+from typing import Set, Callable, List
 from enum import Enum
 from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
@@ -29,9 +29,10 @@ class DeviceDataEncoder(json.JSONEncoder):
             return data
 
 
-class OneTimeScanner:
+class VictronScanner:
 
-    def __init__(self, device_keys: dict[str, str] = {}):
+    def __init__(self, onSuccess: Callable[..., str], device_keys: dict[str, str] = {}):
+        self._onSuccess = onSuccess
         self._device_keys = {k.lower(): v for k, v in device_keys.items()}
         self._known_devices: dict[str, Device] = {}
 
@@ -39,12 +40,7 @@ class OneTimeScanner:
         self._scanner: BleakScanner = BleakScanner(
             detection_callback=self.detection_callback
         )
-        self.scanning = asyncio.Event()
         self._seen_data: Set[bytes] = set()
-
-    async def start(self):
-        logger.info(f"Reading data for {list(self._device_keys.keys())}")
-        await super().start()
 
     def get_device(self, ble_device: BLEDevice, raw_data: bytes) -> Device:
         address = ble_device.address.lower()
@@ -84,27 +80,18 @@ class OneTimeScanner:
         except UnknownDeviceError as e:
             logger.error(e)
             return
-        parsed = device.parse(data)
+        parsed_device = device.parse(data)
 
         blob = {
             "name": ble_device.name,
             "address": ble_device.address,
             "rssi": ble_device.rssi,
-            "payload": parsed,
+            "payload": parsed_device,
         }
-        print(json.dumps(blob, cls=DeviceDataEncoder, indent=2))
+        self._onSuccess(json.dumps(blob, cls=DeviceDataEncoder, indent=2))
 
-        print('\t\tDevice found so we terminate')
-        self.scanning.clear()
-
-    async def run(self):
-        loop = asyncio.get_event_loop()
+    async def start(self):
         await self._scanner.start()
-        self.scanning.set()
-        end_time = loop.time() + timeout_seconds
-        while self.scanning.is_set():
-            if loop.time() > end_time:
-                self.scanning.clear()
-                print('\t\tScan has timed out so we terminate')
-            await asyncio.sleep(0.1)
+    
+    async def stop(self):
         await self._scanner.stop()
