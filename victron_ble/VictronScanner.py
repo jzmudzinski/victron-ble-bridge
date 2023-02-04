@@ -8,6 +8,8 @@ from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
 from devices import Device, DeviceData, detect_device_type
 from exceptions import AdvertisementKeyMissingError, UnknownDeviceError
+from config import CONFIG
+
 
 timeout_seconds = 10
 
@@ -31,9 +33,11 @@ class DeviceDataEncoder(json.JSONEncoder):
 
 class VictronScanner:
 
-    def __init__(self, onSuccess: Callable[..., str], device_keys: dict[str, str] = {}):
+    def __init__(self, onSuccess: Callable[..., str]):
         self._onSuccess = onSuccess
-        self._device_keys = {k.lower(): v for k, v in device_keys.items()}
+
+        # lowercase bluetooth addresses
+        self._device_keys = dict((k.lower(), v) for k,v in CONFIG["devices"].items())
         self._known_devices: dict[str, Device] = {}
 
         self._scanner = BleakScanner()
@@ -88,7 +92,7 @@ class VictronScanner:
             "rssi": ble_device.rssi,
             "payload": parsed_device,
         }
-        self._onSuccess(json.dumps(blob, cls=DeviceDataEncoder, indent=2))
+        self._onSuccess(ble_device, parsed_device)
 
     async def start(self):
         await self._scanner.start()

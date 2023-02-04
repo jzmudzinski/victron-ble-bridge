@@ -130,3 +130,5 @@ dmypy.json
 
 # templates
 .github/templates/*
+victron_ble/victron-ble-mgmt-bb846febdbca.json
+victron_ble/config.py
