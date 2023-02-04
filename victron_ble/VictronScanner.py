@@ -84,15 +84,8 @@ class VictronScanner:
         except UnknownDeviceError as e:
             logger.error(e)
             return
-        parsed_device = device.parse(data)
-
-        blob = {
-            "name": ble_device.name,
-            "address": ble_device.address,
-            "rssi": ble_device.rssi,
-            "payload": parsed_device,
-        }
-        self._onSuccess(ble_device, parsed_device)
+        
+        self._onSuccess(ble_device, device.parse(data))
 
     async def start(self):
         await self._scanner.start()
