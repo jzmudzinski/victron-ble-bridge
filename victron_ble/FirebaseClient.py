@@ -32,5 +32,6 @@ class FirebaseClient:
         return data    
 
     def send(self, bleDevice: BLEDevice, device: Device):
+        self.db.collection(f'{CONFIG["uid"]}').document(f'{bleDevice.address}').set({'name': bleDevice.name})
         self.db.collection(f'{CONFIG["uid"]}').document(f'{bleDevice.address}').collection(f'{datetime.datetime.now()}').add(self.getDict(device)) 
   
