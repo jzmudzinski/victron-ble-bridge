@@ -17,8 +17,8 @@ def cli(verbose):
     logger.setLevel(logging.DEBUG if verbose else logging.INFO)
 
 
-@cli.command(help="Read data from victron bluetooth devices specified in config.py")
-def read(timeout: Optional[int] = 10):
+@cli.command(help="scan for data from victron bluetooth devices specified in config.py")
+def scan(timeout: Optional[int] = 10):
 
     firebaseClient = FirebaseClient()
     scanning = asyncio.Event()
