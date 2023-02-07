@@ -1,5 +1,5 @@
 from VictronScanner import VictronScanner
-from FirebaseClient import FirebaseClient
+from RestClient import RestClient
 import asyncio
 import click
 import logging
@@ -16,38 +16,44 @@ logger.addHandler(logging.StreamHandler())
 def cli(verbose):
     logger.setLevel(logging.DEBUG if verbose else logging.INFO)
 
-
 @cli.command(help="scan for data from victron bluetooth devices specified in config.py")
-def scan(timeout: Optional[int] = 10):
+def scan():
 
-    firebaseClient = FirebaseClient()
-    scanning = asyncio.Event()
     loop = asyncio.new_event_loop()   
+    restClient = RestClient()
+    scanning = asyncio.Event()
     foundDevices = set()
+    timeout = CONFIG["timeout"]
     
     def onDeviceFound(bleDevice: BLEDevice, device: Device):
-        if (bleDevice.address not in foundDevices):
+        if (timeout > 0 and bleDevice.address not in foundDevices):
             foundDevices.add(bleDevice.address)
             # if all devices have been found let the timeout loop stop of the scan
             if (len(foundDevices) == len(CONFIG['devices'].keys())):
                 if scanning.is_set(): 
                     scanning.clear()
-            firebaseClient.send(bleDevice, device)
+        restClient.send(bleDevice, device)
+
 
     async def startScanning():
-        victronScanner = VictronScanner(onDeviceFound)
+        victronScanner = VictronScanner(onDeviceFound)     
         await victronScanner.start()
-        scanning.set()
         
-        end_time = loop.time() + timeout
-        while scanning.is_set():
-            if loop.time() > end_time:
-                scanning.clear()
-                print('\nScan has timed out so we terminate')
-            await asyncio.sleep(0.1)
-        await victronScanner.stop()
+        if timeout > 0:
+            scanning.set()
+            end_time = loop.time() + timeout
+            while scanning.is_set():
+                if loop.time() > end_time:
+                    scanning.clear()
+                    print('\nScan has timed out so we terminate')
+                await asyncio.sleep(0.1)
+            await victronScanner.stop()
 
-    loop.run_until_complete(startScanning())
+    if (timeout > 0 ):
+        loop.run_until_complete(startScanning())
+    else:
+        asyncio.ensure_future(startScanning(), loop=loop)
+        loop.run_forever()
 
 if __name__ == "__main__":
     cli()

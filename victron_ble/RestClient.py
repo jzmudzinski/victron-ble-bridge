@@ -1,24 +1,20 @@
 import logging
-import datetime
+from time import time
 import inspect
 from typing import Any, Dict
 from enum import Enum
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
 from config import CONFIG
 from bleak.backends.device import BLEDevice
 from devices import Device
+from requests import post
+import json
 
 logger = logging.getLogger(__name__)
 
-class FirebaseClient:
+class RestClient:
 
     def __init__(self):
-        # read config file of service account for communicating with firestore API
-        cred = credentials.Certificate('victron-ble-mgmt-bb846febdbca.json')
-        app = firebase_admin.initialize_app(cred)
-        self.db = firestore.client()
+        self.url = CONFIG["server_url"]
 
     def getDict(self, device: Device) -> dict:
         data = {}
@@ -32,6 +28,14 @@ class FirebaseClient:
         return data    
 
     def send(self, bleDevice: BLEDevice, device: Device):
-        self.db.collection(f'{CONFIG["uid"]}').document(f'{bleDevice.address}').set({'name': bleDevice.name})
-        self.db.collection(f'{CONFIG["uid"]}').document(f'{bleDevice.address}').collection(f'{datetime.datetime.now()}').add(self.getDict(device)) 
-  
+        # send data to backend
+        data = self.getDict(device)
+        data['timestamp'] = int(time()*1000)
+        blob = {
+            "name": bleDevice.name,
+            "address": bleDevice.address,
+            "rssi": bleDevice.rssi,
+            "data": data,
+        }
+        print(json.dumps(blob, indent=2));
+        post(f"{self.url}/api/device", json=blob)
