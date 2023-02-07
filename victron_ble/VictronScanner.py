@@ -10,32 +10,13 @@ from devices import Device, DeviceData, detect_device_type
 from exceptions import AdvertisementKeyMissingError, UnknownDeviceError
 from config import CONFIG
 
-
-timeout_seconds = 10
-
-
 logger = logging.getLogger(__name__)
-
-# An ugly hack to print a class as JSON
-class DeviceDataEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if issubclass(obj.__class__, DeviceData):
-            data = {}
-            for name, method in inspect.getmembers(obj, predicate=inspect.ismethod):
-                if name.startswith("get_"):
-                    value = method()
-                    if isinstance(value, Enum):
-                        value = value.name.lower()
-                    if value is not None:
-                        data[name[4:]] = value
-            return data
-
 
 class VictronScanner:
 
     def __init__(self, onSuccess: Callable[..., str]):
         self._onSuccess = onSuccess
-
+    
         # lowercase bluetooth addresses
         self._device_keys = dict((k.lower(), v) for k,v in CONFIG["devices"].items())
         self._known_devices: dict[str, Device] = {}
