@@ -1,0 +1,18 @@
+# config.py.EXAMPLE
+# fill out with your own data, then remove .EXAMPLE extension
+
+CONFIG = {
+    "server_url": "http://localhost:6060",
+
+    # timeout in seconds to scan for victron bluetooth instant advertisements; set to 0 to scan continously
+    "timeout": 0,
+
+    # victron devices to scan for
+    # format: "Device bluetooth address": "Encryption Key"
+    # get this data using sqlite3 on a computer running VictronConnect
+    # ❯ sqlite3 ~/some/path/to/VictronConnect/db.sqlite 'select address,advertisementKey from advertisementKeys inner join macAddresses on advertisementKeys.macAddress == macAddresses.macAddress'
+    "devices": {
+        "address1": "advertisementKey1",
+        "address2": "advertisementKey2"
+    }
+}
