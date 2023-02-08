@@ -31,6 +31,8 @@ class RestClient:
         # send data to backend
         data = self.getDict(device)
         data['timestamp'] = int(time()*1000)
+        if "voltage" in data and "current" in data:
+            data['power'] = round(data["voltage"]*data["current"])
         blob = {
             "name": bleDevice.name,
             "address": bleDevice.address,
