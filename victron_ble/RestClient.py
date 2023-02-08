@@ -39,5 +39,4 @@ class RestClient:
             "rssi": bleDevice.rssi,
             "data": data,
         }
-        print(json.dumps(blob, indent=2));
         post(f"{self.url}/api/device", json=blob)
