@@ -1,13 +1,12 @@
 import logging
 from time import time
-import inspect
 from typing import Any, Dict
 from enum import Enum
 from config import CONFIG
 from bleak.backends.device import BLEDevice
 from devices import Device
 from requests import post
-import json
+# import json
 
 logger = logging.getLogger(__name__)
 
@@ -16,27 +15,32 @@ class RestClient:
     def __init__(self):
         self.url = CONFIG["server_url"]
 
-    def getDict(self, device: Device) -> dict:
-        data = {}
-        for name, method in inspect.getmembers(device, predicate=inspect.ismethod):
-            if name.startswith("get_"):
-                value = method()
-                if isinstance(value, Enum):
-                    value = value.name.lower()
-                if value is not None:
-                    data[name[4:]] = value
-        return data    
+    def add(self, blob: dict, device: Device, key: str) -> dict:
+        if key in device._data:
+            value = device._data[key]
+            if isinstance(value, Enum):
+                value = value.name.lower()
+            if value is not None:
+                blob["data"][key] = value
 
     def send(self, bleDevice: BLEDevice, device: Device):
-        # send data to backend
-        data = self.getDict(device)
-        data['timestamp'] = int(time()*1000)
-        if "voltage" in data and "current" in data:
-            data['power'] = round(data["voltage"]*data["current"])
         blob = {
             "name": bleDevice.name,
             "address": bleDevice.address,
-            "rssi": bleDevice.rssi,
-            "data": data,
+            "data": {
+                "timestamp": int(time()*1000),
+            }
         }
+        self.add(blob, device, "model_name")
+        self.add(blob, device, "remaining_mins")
+        self.add(blob, device, "charge_state")
+        self.add(blob, device, "soc")
+        self.add(blob, device, "solar_power")
+        self.add(blob, device, "yield_today")
+
+        if "voltage" in device._data and "current" in device._data:
+            blob["data"]["power"] = round(device._data["voltage"]*device._data["current"])
+
+        # print(json.dumps(blob))
         post(f"{self.url}/api/device", json=blob)
+
