@@ -6,8 +6,8 @@ Disclaimer: This software is not an officially supported interface by Victron an
 
 ## Supported Devices:
 
-* SmartShunt 500A/500mv and BMV-712/702:
-* Solar Charger:
+* SmartShunt 500A/500mv and BMV-712/702
+* Solar Chargers
 
 ## Installation
 
