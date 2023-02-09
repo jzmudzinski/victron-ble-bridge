@@ -70,8 +70,11 @@ sqlite3 ~/.local/share/Victron\ Energy/Victron\ Connect/d25b6546b47ebb21a04ff86a
 
 **Windows**
 
-Not supported yet. Please figure this out and contribute some
-instructions.
+1. Download the VictronConnect installer from the Victron website and install.
+2. Pair with your device at least once to transfer keys
+3. Open Explorer, navigate to ```%AppData%\Local\Victron Energy\Victron Connect\```
+4. Open [SQLite Viewer](https://inloop.github.io/sqlite-viewer/) in a web browser of your choice
+5. Drag and drop the ```d25b6546b47ebb21a04ff86a2c4fbb76.sqlite``` file from Explorer into the SQLite Viewer window
 
 ## Developing
 
