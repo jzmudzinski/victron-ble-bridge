@@ -7,20 +7,7 @@ Disclaimer: This software is not an officially supported interface by Victron an
 ## Supported Devices:
 
 * SmartShunt 500A/500mv and BMV-712/702:
-    * Voltage
-    * Alarm status
-    * Current
-    * Remaining time
-    * State of charge (%)
-    * Consumed amp hours
-    * Auxilary input (temperature, midpoint voltage, or starter battery voltage)
 * Solar Charger:
-    * Charger State (Off, Bulk, Absorption, Float)
-    * Battery Voltage (V)
-    * Battery Charging Current (A)
-    * Solar Power (W)
-    * Yield Today (Wh)
-    * External Device Load (A)
 
 ## Installation
 
