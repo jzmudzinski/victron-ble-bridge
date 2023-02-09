@@ -27,6 +27,7 @@ class RestClient:
         blob = {
             "name": bleDevice.name,
             "address": bleDevice.address,
+            "model_name": device.get_model_name(),
             "data": {
                 "timestamp": int(time()*1000),
             }
