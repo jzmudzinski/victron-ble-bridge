@@ -12,7 +12,7 @@ from construct import (
     Struct,
 )
 
-from victron_ble.devices.base import Device, DeviceData, kelvin_to_celsius
+from devices.base import Device, DeviceData, kelvin_to_celsius
 
 
 class AuxMode(Enum):

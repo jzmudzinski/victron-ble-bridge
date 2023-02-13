@@ -2,11 +2,11 @@ from typing import Dict, Optional, Type
 
 from construct import Int8ul, Int16ul
 
-from victron_ble.devices.base import Device, DeviceData
-from victron_ble.devices.battery_monitor import AuxMode, BatteryMonitor
-from victron_ble.devices.battery_sense import BatterySense
-from victron_ble.devices.dc_energy_meter import DcEnergyMeter
-from victron_ble.devices.solar_charger import SolarCharger
+from devices.base import Device, DeviceData
+from devices.battery_monitor import AuxMode, BatteryMonitor
+from devices.battery_sense import BatterySense
+from devices.dc_energy_meter import DcEnergyMeter
+from devices.solar_charger import SolarCharger
 
 __all__ = [
     "AuxMode",

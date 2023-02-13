@@ -1,7 +1,7 @@
 from construct import Int16sl, Int16ul, Struct
 from typing import Optional
 
-from victron_ble.devices.base import Device, DeviceData, OperationMode
+from devices.base import Device, DeviceData, OperationMode
 
 
 class SolarChargerData(DeviceData):

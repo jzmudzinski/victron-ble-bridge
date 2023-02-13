@@ -1,4 +1,4 @@
-from victron_ble.devices import BatteryMonitor, Device, DeviceData
+from devices import BatteryMonitor, Device, DeviceData
 
 
 class BatterySenseData(DeviceData):
