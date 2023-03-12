@@ -1,5 +1,5 @@
 from VictronScanner import VictronScanner
-from RestClient import RestClient
+# from RestClient import RestClient
 import asyncio
 import click
 import logging
@@ -20,7 +20,7 @@ def cli(verbose):
 def scan():
 
     loop = asyncio.new_event_loop()   
-    restClient = RestClient()
+    # restClient = RestClient()
     scanning = asyncio.Event()
     foundDevices = set()
     timeout = CONFIG["timeout"]
@@ -32,7 +32,8 @@ def scan():
             if (len(foundDevices) == len(CONFIG['devices'].keys())):
                 if scanning.is_set(): 
                     scanning.clear()
-        restClient.send(bleDevice, device)
+        # restClient.send(bleDevice, device)
+        print(bleDevice, Device.parse(device))
 
 
     async def startScanning():
