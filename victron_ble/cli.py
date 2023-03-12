@@ -2,6 +2,8 @@ from VictronScanner import VictronScanner
 import asyncio
 import click
 import logging
+import json
+import sys
 from typing import List, Tuple, Optional
 from bleak.backends.device import BLEDevice
 from devices import Device
@@ -31,7 +33,9 @@ def scan(timeout, address, key):
             if (bleDevice.address == address):
                 if scanning.is_set(): 
                     scanning.clear()
+        # print(json.dumps(device._data))
         print(device._data)
+        sys.exit(0)
 
 
     async def startScanning():

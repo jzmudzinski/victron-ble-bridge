@@ -69,7 +69,8 @@ class SolarCharger(Device):
         pkt = self.PACKET.parse(decrypted)
 
         parsed = {
-            "charge_state": OperationMode(pkt.charge_state),
+            # "charge_state": OperationMode(pkt.charge_state),
+            "charge_state": pkt.charge_state,
             "battery_voltage": pkt.battery_voltage / 100,
             "battery_charging_current": pkt.battery_charging_current / 10,
             "yield_today": pkt.yield_today * 10,
