@@ -8,17 +8,16 @@ from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
 from devices import Device, DeviceData, detect_device_type
 from exceptions import AdvertisementKeyMissingError, UnknownDeviceError
-from config import CONFIG
 
 logger = logging.getLogger(__name__)
 
 class VictronScanner:
 
-    def __init__(self, onSuccess: Callable[..., str]):
+    def __init__(self, address, key, onSuccess: Callable[..., str]):
         self._onSuccess = onSuccess
     
         # lowercase bluetooth addresses
-        self._device_keys = dict((k.lower(), v) for k,v in CONFIG["devices"].items())
+        self._device_keys = dict((address, key))
         self._known_devices: dict[str, Device] = {}
 
         self._scanner = BleakScanner()
