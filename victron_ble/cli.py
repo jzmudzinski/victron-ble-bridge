@@ -35,7 +35,7 @@ def scan(timeout, address, key):
 
 
     async def startScanning():
-        victronScanner = VictronScanner(onDeviceFound)     
+        victronScanner = VictronScanner(address, key, onDeviceFound)     
         await victronScanner.start()
         
         if timeout > 0:

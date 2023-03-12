@@ -17,7 +17,8 @@ class VictronScanner:
         self._onSuccess = onSuccess
     
         # lowercase bluetooth addresses
-        self._device_keys = dict((address, key))
+        self._device_keys = { address.lower(): key }
+        # dict(address.lower() = key)
         self._known_devices: dict[str, Device] = {}
 
         self._scanner = BleakScanner()
