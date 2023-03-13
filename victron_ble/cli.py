@@ -33,9 +33,9 @@ def scan(timeout, address, key):
             if (bleDevice.address == address):
                 if scanning.is_set(): 
                     scanning.clear()
-        # print(json.dumps(device._data))
-        print(device._data)
-        sys.exit(0)
+        print(json.dumps(device._data))
+        # print(device._data)
+        # sys.exit(0)
 
 
     async def startScanning():

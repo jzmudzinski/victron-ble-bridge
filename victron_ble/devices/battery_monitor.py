@@ -187,7 +187,7 @@ class BatteryMonitor(Device):
 
         parsed = {
             "remaining_mins": pkt.remaining_mins,
-            "aux_mode": aux_mode,
+            "aux_mode": str(aux_mode),
             "current": (pkt.current >> 2) / 1000,
             "voltage": pkt.voltage / 100,
             "consumed_ah": pkt.consumed_ah / 10,
