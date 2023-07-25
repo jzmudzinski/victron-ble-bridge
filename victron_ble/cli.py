@@ -35,7 +35,7 @@ def scan(timeout, address, key):
                     scanning.clear()
         print(json.dumps(device._data))
         # print(device._data)
-        # sys.exit(0)
+        sys.exit(0)
 
 
     async def startScanning():
