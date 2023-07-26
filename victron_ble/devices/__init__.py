@@ -7,6 +7,7 @@ from devices.battery_monitor import AuxMode, BatteryMonitor
 from devices.battery_sense import BatterySense
 from devices.dc_energy_meter import DcEnergyMeter
 from devices.solar_charger import SolarCharger
+from devices.smart_lithium import SmartLithium
 
 __all__ = [
     "AuxMode",
@@ -52,7 +53,7 @@ def detect_device_type(data: bytes) -> Optional[Type[Device]]:
     elif mode == 0xB:  # MultiRS
         pass
     elif mode == 0x5:  # SmartLithium
-        pass
+        return SmartLithium
     elif mode == 0x1:  # SolarCharger
         return SolarCharger
     elif mode == 0xC:  # VE.Bus
