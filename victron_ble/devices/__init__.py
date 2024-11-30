@@ -16,6 +16,7 @@ __all__ = [
     "BatteryMonitor",
     "DcEnergyMeter",
     "SolarCharger",
+    "SmartLithium",
 ]
 
 # Add to this list if a device should be forced to use a particular implementation
